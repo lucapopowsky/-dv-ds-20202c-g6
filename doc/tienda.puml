@@ -1,0 +1,160 @@
+@startuml
+
+class Prenda <<Entity>> {
+	TipoPrenda tipoPrenda
+	BigDecimal precioBase
+	Estado 		estado
+	Stock 		stock
+	Integer getCantidad()
+	BigDecimal precioVenta ()
+	
+	void descontarStock(cantidad)
+	void agregarStock(cantidad)
+}
+
+note left of Prenda
+precioVenta = 
+estado.precioVenta(precioBase)
+end note 
+
+Prenda -left-> TipoPrenda
+Prenda -right-> Estado
+
+enum TipoPrenda{
+	SACO
+	PANTALON
+	CAMISA
+}
+
+interface Estado{ 
+	precioVenta(precioBase)
+}
+
+class Nueva{
+	BigDecimal precioVenta
+}
+
+note left of Nueva 
+no modifican el precio
+end note
+ 
+class Promocion{
+	BigDecimal precioVenta
+}
+
+note left of Promocion
+Le resta un valor fijo
+decidido por 
+el usuario.
+end note 
+
+class Liquidacion{
+	BigDecimal precioVenta
+}
+
+note left of Liquidacion
+en este caso 
+Es un 50% del valor
+ del producto
+end note
+ 
+Estado ^..Nueva
+Estado ^..Promocion
+Estado ^..Liquidacion
+
+abstract class Venta{
+	Date fecha
+	Cliente cliente
+	Item items
+	{abstract} BigDecimal recargo()
+	BigDecimal total()
+	
+	void agregarItem(Prenda,cantidad)
+	void descontarItem(Prenda,cantidad)
+}
+note right of Venta
+total=
+suma de todos los item.precio + recargo
+end note
+
+
+Venta "1"-->"*" Item
+class Item {
+	Integer cantidad
+	Prenda prenda
+	BigDecimal precio()
+	void descontarStock(Prenda,cantidad)
+	void agregarStock(Prenda,cantidad)
+}
+note right of Item
+precio = 
+prenda.precioVenta()*cantidad
+end note
+Item --> Prenda
+
+class PuntoDeVenta{
+ Venta ventas
+ BigDecimal gananciaDia(fecha)
+}
+class Tienda{
+ 	PuntoDeVenta PuntoDeVentas
+ 	BigDecimal gananciaDia(fecha)
+}
+PuntoDeVenta "0"-right->"*" Venta
+Tienda "1"-right->"*" PuntoDeVenta
+Venta  <--  Cliente
+Venta ^-- VentaTarjeta
+Venta ^-- VentaMercadoPago
+Venta ^--VentaEfectivo
+class VentaTarjeta{
+	Integer cantidadCuotas
+	BigDecimal coeficienteTarjeta
+	BigDecimal recargo()
+}
+note right of VentaTarjeta
+recargo = cantidadCuotas
+ * coeficienteTarjeta
+ +
+ 0,01
+end note
+class VentaMercadoPago{
+	
+	BigDecimal coeficienteTarjeta
+	BigDecimal recargo()
+}
+
+note right of VentaMercadoPago
+recargo = 
+ coeficienteMercadoPago
+ *
+ 0,02
+end note
+
+class VentaEfectivo{
+	
+	
+	BigDecimal recargo()
+}
+
+note right of VentaEfectivo
+recargo = 0
+end note
+
+class Cliente{
+String nombre
+String apellido
+
+}
+
+class Stock{
+ 	
+ 	Integer cantidad
+ 	
+ 	Integer getCantidad()
+ 	void agregarStock(cantidad)
+ 	void descontarrStock(cantidad)
+}
+
+Prenda -->Stock
+
+@enduml
