@@ -1,5 +1,6 @@
 package ar.edu.davinci.dvds20202cg6.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
@@ -28,7 +29,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="prendas")
 
-public class Prenda {
+public class Prenda implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	@Id
 	
 	//private Estado estado;
