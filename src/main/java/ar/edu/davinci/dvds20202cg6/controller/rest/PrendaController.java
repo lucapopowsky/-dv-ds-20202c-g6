@@ -20,7 +20,7 @@ public class PrendaController extends TiendaAppRest {
 	@Autowired
 	private PrendaService prendaService;
 	//metodo de listado
-	@GetMapping(name = "/prendas")
+	@GetMapping(path = "/prendas")
 	public List<Prenda> getListAll(){
 		LOGGER.info("Listar todas las prendas");
 		return prendaService.listAll();
