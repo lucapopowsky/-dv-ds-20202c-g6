@@ -27,6 +27,10 @@ public class PrendaServiceImpl implements PrendaService {
 		
 		return prendaRepository.findAll();
 	}
+	@Override
+	public void delete(Long id) {
+		prendaRepository.deleteById(id);
+	}
 
 	@Override
 	public Page<Prenda> list(Pageable pageable) {
