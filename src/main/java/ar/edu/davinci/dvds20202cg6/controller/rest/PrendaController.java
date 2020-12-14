@@ -5,6 +5,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +23,29 @@ public class PrendaController extends TiendaAppRest {
 	@Autowired
 	private PrendaService prendaService;
 	//metodo de listado
-	@GetMapping(path = "/prendas")
-	public List<Prenda> getListAll(){
-		LOGGER.info("Listar todas las prendas");
+	
+	
+	/**
+	 * Listar
+	 */
+	@GetMapping(path = "/prendas/all")
+	public List<Prenda> getListAll() {
+		LOGGER.info("listar todas las prendas");
+
 		return prendaService.listAll();
+	}
+
+	/**
+	 * Listar paginado
+	 */
+
+	@GetMapping(path = "/prendas")
+	public Page<Prenda> getList(Pageable pageable){
+		
+		LOGGER.info("listar todas las prendas paginadas");
+		LOGGER.info("Pageable: " + pageable);
+		return prendaService.list(pageable);
+
 		
 	}
 	
