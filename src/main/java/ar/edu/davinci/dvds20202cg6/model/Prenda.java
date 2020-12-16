@@ -49,6 +49,9 @@ public class Prenda implements Serializable {
 	@Column(name = "prd_descripcion")
     private String descripcion;
 
+	public BigDecimal getPrecioFinal(){
+		  return precioBase; //estado.precioFinal(precioPropio);
+		}
 
 
 }

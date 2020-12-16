@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import ar.edu.davinci.dvds20202cg6.model.Prenda;
+import ar.edu.davinci.dvds20202cg6.model.TipoPrenda;
 
 
 public interface PrendaService {
@@ -18,6 +19,6 @@ public interface PrendaService {
 	public void delete(Prenda prenda);
 	public long count();
 	public void delete(Long id);
-	
+	public List<TipoPrenda> getTipoPrendas();
 
 }
