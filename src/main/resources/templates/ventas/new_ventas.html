@@ -3,11 +3,11 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-<title>Editar Venta</title>
+<title>Nueva Venta</title>
 </head>
 <body>
 	<div align="center">
-		<h1>Editar Venta</h1>
+		<h1>Nueva Venta</h1>
 		<br />
 		<table>
 			<tbody>
@@ -33,8 +33,8 @@
 					<td>
 					    <select id="tipoVenta" name="tipoVenta">
   					        <option value="">Seleccione el tipo de venta</option>
-							<option value="Efectivo">Efectivo</option>							
-							<option value="Tarjeta">Tarjeta</option>							
+							<option th:value="Efectivo">Efectivo</option>							
+							<option th:value="Tarjeta">Tarjeta</option>							
 					    </select>
 					</td>
 				</tr>
@@ -50,37 +50,12 @@
 					        </option>
 					    </select>
 					</td>
+				</tr>
 				<tr>
 					<td colspan="2"><button type="submit">Grabar</button></td>
 				</tr>
 			</table>
-			<table>
-				<tbody>
-					<tr>
-						<th>Items</th>
-						<th>&nbsp;</th>
-						<td th:object="${itemsMostrar}">
-						    <select id="items" name="items">
-	  					        <option value="">Seleccione un item</option>
-						        <option th:each="items : ${itemsMostrar}"
-						                th:value="${itemsMostrar}"
-						                th:text="${itemsMostrar.Prenda}"
-						                th:selected="${items.addItem(item)}">
-						        </option>
-						    </select>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<table>
-				<tbody>
-					<tr>
-						<th>Items</th>
-						<th>&nbsp;</th>						
-						<td><a th:href="@{'/tienda/ventas/items/' + ${venta.id}}">Nuevo Item</a>
-					</tr>
-				</tbody>
-			</table>
+			Debe guardar la venta para agregar los items
 		</form>
 	</div>
 </body>
