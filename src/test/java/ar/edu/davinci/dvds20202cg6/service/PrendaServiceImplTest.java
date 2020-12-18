@@ -1,9 +1,9 @@
 package ar.edu.davinci.dvds20202cg6.service;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,50 +18,78 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ar.edu.davinci.dvds20202cg6.model.Prenda;
 import ar.edu.davinci.dvds20202cg6.model.TipoPrenda;
+
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-
 class PrendaServiceImplTest {
-
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(PrendaServiceImplTest.class);
-	//nos traiga el servicio
+
 	@Autowired
 	private PrendaService prendaService;
 	
-	//metodos de negocio
 	@Test
 	void testListAll() {
+		
 		List<Prenda> prendas = prendaService.listAll();
-		LOGGER.info("Prenda size: " + prendas.size());
+		
+		LOGGER.info("Prenda size:" + prendas.size());
+
 		assertNotNull(prendas, "Prendas es nulo");
-		assertTrue(prendas.size()>0, "Prendas está vacio");
+		assertTrue(prendas.size() > 0, "Prendas está vacio");
+		
 	}
+
 	@Test
 	void testList() {
+		
 		Pageable pageable = PageRequest.of(0, 2);
-		Page <Prenda> prendas = prendaService.list(pageable );
-		LOGGER.info("Prenda size: " + prendas.getSize());
-		LOGGER.info("Prenda total page: " + prendas.getTotalPages());
+		Page<Prenda> prendas = prendaService.list(pageable);
+
+		LOGGER.info("Prenda size:" + prendas.getSize());
+		LOGGER.info("Prenda total page:" + prendas.getTotalPages());
+
+		Pageable pageable1 = PageRequest.of(1, 2);
+		Page<Prenda> prendas1 = prendaService.list(pageable1);
+
+		LOGGER.info("Prenda size:" + prendas1.getSize());
+		LOGGER.info("Prenda total page:" + prendas1.getTotalPages());
+
 		assertNotNull(prendas, "Prendas es nulo");
-		assertTrue(prendas.getSize()>0, "Prendas está vacio");
+		assertTrue(prendas.getSize() > 0, "Prendas está vacio");
 	}
 
 	@Test
 	void testFindById() {
-		//va a devolver una prenda
-		Prenda prenda= prendaService.findById(4L);
+		Optional<Prenda> prendaOptional = prendaService.findById(4L);
+		Prenda prenda = null;
+		if (prendaOptional.isPresent()) {
+			LOGGER.info("LA PRENDA FUE ENCONTRADA");
+			prenda = prendaOptional.get();
+		} else {
+			LOGGER.info("LA PRENDA NO FUE ENCONTRADA");
+		}			
 		assertNotNull(prenda);
-		assertEquals(prenda.getDescripcion(),"Pantalon Gabardina Beige");
+		assertEquals(prenda.getDescripcion(), "Pantalon Gabardina Beige");
 	}
+
 	@Test
 	void testFindById_withError() {
-		Prenda prenda = prendaService.findById(0L);
-		
+		Optional<Prenda> prendaOptional = prendaService.findById(0L);
+		Prenda prenda = null;
+		if (prendaOptional.isPresent()) {
+			LOGGER.info("LA PRENDA FUE ENCONTRADA");
+			prenda = prendaOptional.get();
+		} else {
+			LOGGER.info("LA PRENDA NO FUE ENCONTRADA");
+		}		
 		assertNull(prenda);
 	}
 
 	@Test
 	void testSave() {
+		
+		
 		LOGGER.info("Prenda count antes insert: " + prendaService.count());
 		Prenda prenda = Prenda.builder()
 				.descripcion("Tapado Negro")
@@ -77,19 +105,26 @@ class PrendaServiceImplTest {
 		LOGGER.info("Prenda count después insert: " + prendaService.count());
 		
 		
-
-		
 	}
 
 	@Test
 	void testDelete() {
+		
 		LOGGER.info("Prenda count antes delete: " + prendaService.count());
 
-		Prenda prenda = prendaService.findById(2L);
-		prendaService.delete(prenda);
-		
-		LOGGER.info("Prenda count después delete: " + prendaService.count());
-
+		Optional<Prenda> prendaOptional = prendaService.findById(2L);
+		Prenda prenda = null;
+		if (prendaOptional.isPresent()) {
+			LOGGER.info("LA PRENDA FUE ENCONTRADA");
+			prenda = prendaOptional.get();
+			prendaService.delete(prenda);
+			LOGGER.info("Prenda count después delete: " + prendaService.count());
+		} else {
+			LOGGER.info("LA PRENDA NO FUE ENCONTRADA");
+		}
 	}
 
 }
+
+
+

@@ -1,6 +1,9 @@
 package ar.edu.davinci.dvds20202cg6.controller.view;
 
 import org.springframework.stereotype.Controller;
+
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +27,21 @@ import ar.edu.davinci.dvds20202cg6.model.Prenda;
 
 
 
-@Controller 
+@Controller
 public class PrendaController extends TiendaApp {
-private final Logger LOGGER = LoggerFactory.getLogger(PrendaController.class);
+	private final Logger LOGGER = 
+			LoggerFactory.getLogger(PrendaController.class);
 
 	
 	@Autowired
 	private PrendaService prendaService;
 	
 	
-	@GetMapping
-	public String viewHomePage(Model model) {
-		LOGGER.info("GET - viewHomePage - /index");
-		return "index";
-	}
+	//@GetMapping
+	//public String viewHomePage(Model model) {
+		//LOGGER.info("GET - viewHomePage - /index");
+	//	return "index";
+	//}
 	
 	@GetMapping(path = "prendas/list")
 	public String showPrendaPage(Model model) {
@@ -78,10 +82,14 @@ private final Logger LOGGER = LoggerFactory.getLogger(PrendaController.class);
 		LOGGER.info("prenda: " + prendaId);
 
 		ModelAndView mav = new ModelAndView("prendas/edit_prendas");
-		Prenda prenda = prendaService.findById(prendaId);
-		mav.addObject("prenda", prenda);
-		mav.addObject("tipoPrendas",prendaService.getTipoPrendas());
-		mav.addObject("tipoPrendaActual",prenda.getTipo());
+		Optional<Prenda> prendaOptional = prendaService.findById(prendaId);
+		Prenda prenda = null;
+		if (prendaOptional.isPresent()) {
+			prenda  = prendaOptional.get();
+			mav.addObject("prenda", prenda);
+			mav.addObject("tipoPrendaActual", prenda.getTipo());
+		}
+		mav.addObject("tipoPrendas", prendaService.getTipoPrendas());
 		return mav;
 	}
 
@@ -92,5 +100,4 @@ private final Logger LOGGER = LoggerFactory.getLogger(PrendaController.class);
 		prendaService.delete(prendaId);
 		return "redirect:/tienda/prendas/list";
 	}
-
 }
