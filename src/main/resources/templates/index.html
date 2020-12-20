@@ -3,6 +3,9 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
+<link href="webjars/bootstrap/4.5.3/css/bootstrap.min.css"                 rel="stylesheet">
+
+
 <title>Tienda Ropita</title>
 </head>
 <body>
@@ -13,12 +16,16 @@
 	<br />
 	<div align="left">
 		<ul>
-			<li><a href="/tienda/prendas/list">Listado de prendas</a></li>
-			<li><a href="/tienda/clientes/list">Listado de clientes</a></li>
-			<li><a href="/tienda/ventas/list">Listado de ventas</a></li>
+			<li style="padding:5px;"><a href="/tienda/prendas/list"><button class="btn btn-primary text-light">Listado de prendas →</button></a></li> 
+			            <li style="padding:5px;"><a href="/tienda/clientes/list"><button class="btn btn-primary text-light">Listado de clientes →</button></a></li>     
+			                    <li style="padding:5px;"><a href="/tienda/ventas/list"><button class="btn btn-primary text-light">Listado de ventas →</button></a></li>
 			
 		</ul>
 		<br />
 	</div>
+	
+	<script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+        <script src="webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
 </body>
 </html>
+

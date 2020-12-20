@@ -1,4 +1,6 @@
 package ar.edu.davinci.dvds20202cg6.controller.view;
+
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,10 +21,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.davinci.dvds20202cg6.controller.TiendaApp;
 import ar.edu.davinci.dvds20202cg6.controller.view.VentaController;
+import ar.edu.davinci.dvds20202cg6.service.ClienteService;
+import ar.edu.davinci.dvds20202cg6.service.ItemService;
+import ar.edu.davinci.dvds20202cg6.service.PrendaService;
 import ar.edu.davinci.dvds20202cg6.service.VentaService;
+import ar.edu.davinci.dvds20202cg6.model.Cliente;
+import ar.edu.davinci.dvds20202cg6.model.Item;
+import ar.edu.davinci.dvds20202cg6.model.Prenda;
 import ar.edu.davinci.dvds20202cg6.model.Venta;
-
+import ar.edu.davinci.dvds20202cg6.model.VentaEfectivo;
+													 
+import ar.edu.davinci.dvds20202cg6.model.VentaTarjeta;
 @Controller
+												
+																			  
 
 public class VentaController extends TiendaApp  {
 private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
@@ -30,7 +42,15 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 	
 	@Autowired
 	private VentaService ventaService;
+ 
+	@Autowired
+	private ClienteService clienteService;
+		
+	@Autowired
+	private ItemService itemService;
 	
+	@Autowired
+	private PrendaService prendaService;
 	
 	@GetMapping(path = "ventas/list")
 	public String showVentaPage(Model model) {
@@ -47,22 +67,54 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 	}
 	
 	@GetMapping(path = "/ventas/new")
-	public String showNewVentaPage(Model model) {
+	public String showNewVentaEfectivoPage(Model model) {
 		LOGGER.info("GET - showNewVentaPage - /ventas/new");
-//		Venta venta = new Venta();
-//		model.addAttribute("venta", venta);
-//		model.addAttribute("tipoVentas", ventaService.getTipoVentas());
-//
-//		LOGGER.info("ventas: " + venta.toString());
+		
+		VentaEfectivo venta = new VentaEfectivo();
+		model.addAttribute("venta", venta);
+		List<Cliente> clientes = clienteService.listAll();
+		model.addAttribute("clientes", clientes);
+		List<Item> items = itemService.listAll();
+		model.addAttribute("items", items);
+		
+		LOGGER.info("ventas: " + venta.toString());
 
 		return "ventas/new_ventas";
 	}
 	
+	@GetMapping(path = "/ventas/items/{id}")
+	public String showItem(Model model, @PathVariable(name = "id") Long ventaId) {
+		LOGGER.info("GET - showItem - /ventas/item");
+		Optional<Venta> venta = ventaService.findById(ventaId);
+		Item item = new Item();
+		if(venta.isPresent()) {
+			item.setVenta(venta.get());
+		}
+		model.addAttribute("item", item);
+		List<Prenda> prendas = prendaService.listAll();
+		model.addAttribute("prendas", prendas);
+		
+		LOGGER.info("items" + item.toString());
+
+		return "ventas/items";
+	}
+ 
+	@PostMapping(value = "/ventas/saveItems")
+	public String saveItems(@ModelAttribute("item") Item item) throws Exception {
+		LOGGER.info("POST - saveItem - /ventas/saveItems");
+		LOGGER.info("item: " + item.toString());
+		
+		itemService.save(item);
+		return "redirect:ventas/showEditVentaPage/" + item.getVenta().getId();
+	}
+	
+	
 	@PostMapping(value = "/ventas/save")
-	public String saveVenta(@ModelAttribute("venta") Venta venta) {
+	public String saveVenta(@ModelAttribute("venta") VentaEfectivo  venta) throws Exception {
 		LOGGER.info("POST - saveVenta - /ventas/save");
 		LOGGER.info("venta: " + venta.toString());
-//		ventaService.save(venta);
+		
+		ventaService.save(venta);
 
 		return "redirect:/tienda/ventas/list";
 	}
@@ -73,6 +125,12 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		LOGGER.info("venta: " + ventaId);
 
 		ModelAndView mav = new ModelAndView("ventas/edit_ventas");
+		
+		List<Cliente> clientes = clienteService.listAll();
+		mav.addObject("clientes", clientes);
+		List<Item> items = itemService.listAll();
+		mav.addObject("items", items);
+		
 		Optional<Venta> ventaOptional = ventaService.findById(ventaId);
 		Venta venta = null;
 		if (ventaOptional.isPresent()) {

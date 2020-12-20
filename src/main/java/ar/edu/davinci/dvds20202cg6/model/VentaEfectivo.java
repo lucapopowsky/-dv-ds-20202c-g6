@@ -19,6 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 
 public class VentaEfectivo extends Venta implements Serializable  {
+	
 	private static final long serialVersionUID = -8393218825317899807L;
 	@Override
 	public Double conRecargo(Double importeBase) {

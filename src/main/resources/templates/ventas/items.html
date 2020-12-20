@@ -30,7 +30,7 @@
 				</tr>
 				<tr>
 					<td>Venta ID:</td>
-					<td><input type="text" th:field="*{venta.id}" readonly="readonly" />
+					<td><input type="text" th:value="${ventaId}" id="ventaId" name="ventaId"/>
 					</td>
 				</tr>
 				<tr>
@@ -52,7 +52,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2"><button type="submit">Grabar</button></td>
+					<td colspan="2"><button type="submit">Guardar</button></td>
 				</tr>
 			</table>
 		</form>

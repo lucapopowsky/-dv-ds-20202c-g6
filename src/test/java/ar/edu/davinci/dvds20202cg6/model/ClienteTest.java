@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-class ClienteTest {
+public class ClienteTest {
 	
 	@Test
 	void testBuilder(){

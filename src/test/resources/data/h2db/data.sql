@@ -8,3 +8,7 @@ VALUES
 (2,'Camisa Blanca',100.54,'CAMISA'),
 (3,'Saco Vestir',102.4,'SACO'),
 (4,'Pantalon Gabardina Beige',1000.4,'PANTALON');
+
+INSERT INTO `clientes` VALUES (2,'Mosquera','Lucho'),(3,'Tolentino','Cecilia'),(4,'Popowsky','Lucas');
+
+

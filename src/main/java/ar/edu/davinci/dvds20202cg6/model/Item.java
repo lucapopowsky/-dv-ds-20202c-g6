@@ -52,7 +52,8 @@ public class Item implements Serializable{
 	
 	//@ManyToOne(targetEntity = Prenda.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@ManyToOne(targetEntity = Prenda.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-	@JoinColumn(name="itm_prd_id", referencedColumnName="prd_id", nullable = false)
+	@JoinColumn(name="itm_prd_id", referencedColumnName="prd_id")
+	
 	private Prenda prenda;
 	
 	public BigDecimal importe() {

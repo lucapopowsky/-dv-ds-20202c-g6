@@ -63,7 +63,7 @@ CREATE TABLE prendas (
 CREATE TABLE ventas (
   vta_id bigint NOT NULL AUTO_INCREMENT,
   tipo_venta varchar(31) NOT NULL,
-  vta_fecha datetime(6) DEFAULT NULL,
+  vta_fecha datetime DEFAULT NULL,
   vta_cli_id bigint DEFAULT NULL,
   PRIMARY KEY (vta_id),
   KEY vta_cli_fk (vta_cli_id),

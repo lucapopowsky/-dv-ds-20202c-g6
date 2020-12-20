@@ -18,11 +18,14 @@ import ar.edu.davinci.dvds20202cg6.repository.PrendaRepository;
 public class PrendaServiceImpl implements PrendaService {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(PrendaServiceImpl.class);
+	
 	private final PrendaRepository prendaRepository;
+	
 	@Autowired
 	public PrendaServiceImpl(final PrendaRepository prendaRepository) {
 		this.prendaRepository = prendaRepository;
 	}
+	
 	@Override
 	public List<Prenda> listAll() {
 		

@@ -191,6 +191,46 @@ public class VentaServiceImpl implements VentaService {
 		
 		return venta;
 	}
+	/*esto fue agregado revisar*/
+	@Override
+	public Venta save(Venta venta) throws Exception {
+
+		Cliente cliente = null;
+		if (venta.getCliente().getId() != null) {
+			cliente = getCliente(venta.getCliente().getId()); 
+		} else {
+			throw new Exception("El cliente es obligatorio");
+		}
+
+		List<Item> items = new ArrayList<Item>(); 
+		if (venta.getItems() != null) {
+			items = getItems(venta.getItems());
+		}
+		
+		if(venta.getClass() == VentaEfectivo.class) {
+			venta = VentaEfectivo.builder()
+					.cliente(cliente)
+					.fecha(Calendar.getInstance().getTime())
+					.items(items)
+					.build();
+			return ventaEfectivoRepository.save((VentaEfectivo)venta);
+		}
+		else if(venta.getClass() == VentaTarjeta.class) {
+			venta = VentaTarjeta.builder()
+					.cliente(cliente)
+					.fecha(Calendar.getInstance().getTime())
+					.items(items)
+					.cantidadCuotas(((VentaTarjeta)venta).getCantidadCuotas())
+					.coeficienteTarjeta(new BigDecimal(0.01D))
+					.build();
+			return ventaTarjetaRepository.save((VentaTarjeta)venta);
+		}
+		else {
+			return venta;
+		}
+	}
+	
+	
 	
 	@Override
 	public Venta deleteItem(Long ventaId, Long itemId) throws Exception {

@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ar.edu.davinci.dvds20202cg6.model.Prenda;
 import ar.edu.davinci.dvds20202cg6.model.TipoPrenda;
+
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class PrendaRepositoryTest {
@@ -25,6 +26,8 @@ class PrendaRepositoryTest {
 	
 	@Test
 	void testFindAll() {
+		assertNotNull(prendaRepository, "El repositorio es nulo.");
+		
 		//Find all trae una lista y necesito que me lo guarde en algun
 		//lado entonces 
 		List<Prenda> prendas= prendaRepository.findAll();
@@ -41,6 +44,7 @@ class PrendaRepositoryTest {
 		
 		if(prendaOpcional.isPresent()) {
 			Prenda prenda = prendaOpcional.get();
+			
 			LOGGER.info("Prenda encontrada: " + prenda);
 			assertEquals(TipoPrenda.PANTALON,prenda.getTipo());
 			

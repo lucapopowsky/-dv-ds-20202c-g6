@@ -71,6 +71,7 @@ public abstract class Venta implements Serializable {
 	@OneToMany(mappedBy="venta", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
 	//@OneToMany(mappedBy="venta", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 //@JoinColumn(name="itm_vta_id", referencedColumnName="vta_id", nullable = false)
+	
 	@JsonManagedReference
 	private List<Item> items;
 	

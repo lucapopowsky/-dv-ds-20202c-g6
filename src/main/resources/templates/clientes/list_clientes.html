@@ -3,25 +3,28 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
+<link href="http://localhost:8091/webjars/bootstrap/4.5.3/css/bootstrap.min.css"
+	    		rel="stylesheet">
 <title>Administrador de Clientes</title>
+
 </head>
 <body>
 	<div align="center">
 		<h1>Listado de Clientes</h1>
 		<br />
-
-		<table>
+<div class="container">
+		<table >
 			<tbody>
 				<tr>
-					<th><a href="/tienda">Volver al menú pricipal</a></th>
+					<th><a href="/tienda"><button class="btn btn-primary text-light">← Volver al menú pricipal</button></a></th>
 					<th>&nbsp;</th>
-					<th><a href="/tienda/clientes/new">Crear un nuevo Cliente</a></th>
+					<th><a href="/tienda/clientes/new"><button class="btn btn-success text-light">Crear un nuevo Cliente</button></a></th>
 				</tr>
 			</tbody>
 		</table>
 		<br />
-		<table border="1" cellpadding="10">
-			<thead>
+		<table border="1" class="table table-striped table-hover table-bordered table-dark">
+			<thead class="thead-light">
 				<tr>
 					<th>Cliente ID</th>
 					<th>Nombre</th>
@@ -34,12 +37,15 @@
 					<td th:text="${cliente.id}">Cliente ID</td>
 					<td th:text="${cliente.nombre}">Nombre</td>
 					<td th:text="${cliente.apellido}">Apellido</td>
-					<td><a th:href="@{'/tienda/clientes/edit/' + ${cliente.id}}">Editar</a>
+					<td><a th:href="@{'/tienda/clientes/edit/' + ${cliente.id}}"><button class="btn btn-primary text-light">Editar</button></a>
 						&nbsp;&nbsp;&nbsp; <a
-						th:href="@{'/tienda/clientes/delete/' + ${cliente.id}}">Borrar</a></td>
+						th:href="@{'/tienda/clientes/delete/' + ${cliente.id}}"><button class="btn btn-danger text-light">Borrar</button></a></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+	</div>
+	<script src="http://localhost:8091/webjars/jquery/3.5.1/jquery.min.js"></script>
+	    <script src="http://localhost:8091/webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
 </body>
 </html>
