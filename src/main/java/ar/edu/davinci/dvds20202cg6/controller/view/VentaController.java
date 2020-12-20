@@ -1,5 +1,7 @@
 package ar.edu.davinci.dvds20202cg6.controller.view;
 
+						   
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +34,7 @@ import ar.edu.davinci.dvds20202cg6.model.Venta;
 import ar.edu.davinci.dvds20202cg6.model.VentaEfectivo;
 													 
 import ar.edu.davinci.dvds20202cg6.model.VentaTarjeta;
+
 @Controller
 												
 																			  
@@ -69,7 +72,8 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 	@GetMapping(path = "/ventas/new")
 	public String showNewVentaEfectivoPage(Model model) {
 		LOGGER.info("GET - showNewVentaPage - /ventas/new");
-		
+		String tipoVenta = "Efectivo";
+		model.addAttribute("tipoVenta", tipoVenta);
 		VentaEfectivo venta = new VentaEfectivo();
 		model.addAttribute("venta", venta);
 		List<Cliente> clientes = clienteService.listAll();
@@ -93,6 +97,7 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		model.addAttribute("item", item);
 		List<Prenda> prendas = prendaService.listAll();
 		model.addAttribute("prendas", prendas);
+		model.addAttribute("ventaId",ventaId);								 
 		
 		LOGGER.info("items" + item.toString());
 
@@ -100,25 +105,40 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 	}
  
 	@PostMapping(value = "/ventas/saveItems")
-	public String saveItems(@ModelAttribute("item") Item item) throws Exception {
+	public String saveItems(@ModelAttribute("item") Item item, @ModelAttribute("ventaId") String ventaId ) throws Exception {
 		LOGGER.info("POST - saveItem - /ventas/saveItems");
 		LOGGER.info("item: " + item.toString());
-		
+		Long i = Long.parseLong(ventaId);
+		Optional<Venta> venta = ventaService.findById(i);
+		if(venta.isPresent()) {
+			item.setVenta(venta.get());
+		}
 		itemService.save(item);
-		return "redirect:ventas/showEditVentaPage/" + item.getVenta().getId();
+		return "redirect:edit/" + ventaId;
 	}
 	
 	
 	@PostMapping(value = "/ventas/save")
-	public String saveVenta(@ModelAttribute("venta") VentaEfectivo  venta) throws Exception {
+	public String saveVenta(@ModelAttribute("venta")  VentaEfectivo venta, @ModelAttribute("tipoVenta") String tipoVenta) throws Exception {
 		LOGGER.info("POST - saveVenta - /ventas/save");
 		LOGGER.info("venta: " + venta.toString());
 		
-		ventaService.save(venta);
-
+		if(tipoVenta.toLowerCase().equals("efectivo")) {
+			ventaService.save(venta);
+		}
+		else {
+			Venta ventaGuardar = new VentaTarjeta();
+			ventaGuardar.setCliente(venta.getCliente());
+			ventaGuardar.setFecha(venta.getFecha());
+			ventaGuardar.setItems(venta.getItems());
+			ventaGuardar.setId(venta.getId());
+			ventaService.save(ventaGuardar);
+		}
+		
 		return "redirect:/tienda/ventas/list";
 	}
 	
+ 
 	@RequestMapping(value = "/ventas/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView showEditVentaPage(@PathVariable(name = "id") Long ventaId) {
 		LOGGER.info("GET - showEditVentaPage - /ventas/edit/{id}");
@@ -129,14 +149,25 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		List<Cliente> clientes = clienteService.listAll();
 		mav.addObject("clientes", clientes);
 		List<Item> items = itemService.listAll();
-		mav.addObject("items", items);
+	List<Item> itemsAgregar = new ArrayList<Item>();
+		for(int i = 1; i < items.size(); i++) {
+			if(items.get(i).getVenta().getId() == ventaId) {
+				itemsAgregar.add(items.get(i));
+			}
+		}
+		mav.addObject("items", itemsAgregar);
+		String tipoVenta = "Efectivo";
 		
 		Optional<Venta> ventaOptional = ventaService.findById(ventaId);
 		Venta venta = null;
 		if (ventaOptional.isPresent()) {
 			venta  = ventaOptional.get();
 			mav.addObject("venta", venta);
+		if(venta.getClass() == VentaTarjeta.class) {
+				tipoVenta = "Tarjeta";
+			}
 		}
+		mav.addObject("tipoVenta", tipoVenta);
 		return mav;
 	}
 
@@ -147,5 +178,6 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		ventaService.delete(ventaId);
 		return "redirect:/tienda/ventas/list";
 	}
+ 
 
 }
