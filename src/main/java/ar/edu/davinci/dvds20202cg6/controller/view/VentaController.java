@@ -126,13 +126,16 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		if(tipoVenta.toLowerCase().equals("efectivo")) {
 			ventaService.save(venta);
 		}
-		else {
-			Venta ventaGuardar = new VentaTarjeta();
+		else{
+			VentaTarjeta venta2 = new VentaTarjeta();
+			venta2.setCantidadCuotas(1);
+			Venta ventaGuardar = venta2;
 			ventaGuardar.setCliente(venta.getCliente());
 			ventaGuardar.setFecha(venta.getFecha());
 			ventaGuardar.setItems(venta.getItems());
 			ventaGuardar.setId(venta.getId());
 			ventaService.save(ventaGuardar);
+			
 		}
 		
 		return "redirect:/tienda/ventas/list";

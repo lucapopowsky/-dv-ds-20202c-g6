@@ -37,16 +37,6 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Tipo Venta:</td>
-					<td>
-					    <select id="tipoVenta" name="tipoVenta">
-  					        <option value="">Seleccione el tipo de venta</option>
-							<option value="Efectivo">Efectivo</option>							
-							<option value="Tarjeta">Tarjeta</option>							
-					    </select>
-					</td>
-				</tr>
-				<tr>
 					<td>Cliente:</td>
 					<td th:object="${cliente}">
 					    <select id="cliente" name="cliente">
@@ -66,39 +56,26 @@
 				<tbody>
 					<tr>
 						<th>Items</th>
-						<th>&nbsp;</th>
-						<td th:object="${itemsMostrar}">
-						    <select id="items" name="items">
-	  					        <option value="">Seleccione un item</option>
-						        <option th:each="items : ${itemsMostrar}"
-						                th:value="${itemsMostrar}"
-						                th:text="${itemsMostrar.Prenda}"
-						                th:selected="${items.addItem(item)}">
-						        </option>
-						    </select>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<table>
-				<tbody>
-					<tr>
-						<th>Items</th>
 						<th>&nbsp;</th>						
-						<td><a th:href="@{'/tienda/ventas/items/' + ${venta.id}}">Nuevo Item</a>
+						<td><a  th:href="@{'/tienda/ventas/items/' + ${venta.id}}" class="btn btn-primary">Nuevo Item</a>
 					</tr>
-					
+			</table>
+			<table border="1" class="table table-striped table-hover table-bordered table-dark">
+				<thead class="thead-light">		
 					<tr>
-					<td>Items:</td>
-					<td th:object="${items}">
-					    <select id="item" name="item">
-					        <option th:each="item : ${items}"
-					                th:value="${item.getId()}"
-					                th:text="${item.getPrenda().getDescripcion()}">
-					        </option>
-					    </select>
-					</td>
-				<tr>
+						<th>Item ID</th>
+						<th>Descripcion </th>
+						<th>cantidad</th>	
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr th:each="item : ${items}">
+						<td th:text="${item.getId()}">Item ID</td>
+						<td th:text="${item.getPrenda().getDescripcion()}">Descripcion</td>
+						<td th:text="${item.getCantidad()}">Cantidad</td>
+						
+				
 				</tbody>
 			</table>
 		</form>
