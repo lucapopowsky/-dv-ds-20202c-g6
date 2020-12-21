@@ -46,7 +46,7 @@
 				<tr>
 					<td>Cliente:</td>
 					<td th:object="${cliente}">
-					    <select id="cliente" name="cliente">
+					    <select id="clienteId" name="clienteId">
   					        <option value="">Seleccione el cliente</option>
 					        <option th:each="cliente : ${clientes}"
 					                th:value="${cliente.getId()}"

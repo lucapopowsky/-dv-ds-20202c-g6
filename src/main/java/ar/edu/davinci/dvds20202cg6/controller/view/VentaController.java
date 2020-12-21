@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,12 +60,12 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 	public String showVentaPage(Model model) {
 		LOGGER.info("GET - showVentaPage  - /ventas/list");
 		
-		Pageable pageable = PageRequest.of(0, 20);
+		Pageable pageable = PageRequest.of(0, 100);
 		Page<Venta> ventas = ventaService.list(pageable);
 		LOGGER.info("GET - showVentaPage venta importe final: " + ventas.getContent().toString());
 		
 		model.addAttribute("listVentas", ventas);
-
+		
 		LOGGER.info("ventas.size: " + ventas.getNumberOfElements());
 		return "ventas/list_ventas";
 	}
@@ -116,25 +117,33 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		itemService.save(item);
 		return "redirect:edit/" + ventaId;
 	}
+
 	
 	
 	@PostMapping(value = "/ventas/save")
-	public String saveVenta(@ModelAttribute("venta")  VentaEfectivo venta, @ModelAttribute("tipoVenta") String tipoVenta) throws Exception {
+	public String saveVenta(@ModelAttribute("venta")  VentaEfectivo venta, @ModelAttribute("tipoVenta") String tipoVenta, @ModelAttribute("clienteId") String clienteId) throws Exception {
 		LOGGER.info("POST - saveVenta - /ventas/save");
 		LOGGER.info("venta: " + venta.toString());
+			Long i = Long.parseLong(clienteId);
+		Optional<Cliente> cliente = clienteService.findById(i);						 
 		
 		if(tipoVenta.toLowerCase().equals("efectivo")) {
+			if(cliente.isPresent()) {
+				venta.setCliente(cliente.get());
+			}				
 			ventaService.save(venta);
 		}
 		else{
-			VentaTarjeta venta2 = new VentaTarjeta();
-			venta2.setCantidadCuotas(1);
-			Venta ventaGuardar = venta2;
-			ventaGuardar.setCliente(venta.getCliente());
+			Venta ventaGuardar = new VentaTarjeta();
+			if(cliente.isPresent()) {
+				ventaGuardar.setCliente(cliente.get());
+			}
 			ventaGuardar.setFecha(venta.getFecha());
+  
 			ventaGuardar.setItems(venta.getItems());
 			ventaGuardar.setId(venta.getId());
 			ventaService.save(ventaGuardar);
+   
 			
 		}
 		
@@ -151,6 +160,8 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		
 		List<Cliente> clientes = clienteService.listAll();
 		mav.addObject("clientes", clientes);
+		mav.addObject("clienteId", 0);
+		
 		List<Item> items = itemService.listAll();
 	List<Item> itemsAgregar = new ArrayList<Item>();
 		for(int i = 1; i < items.size(); i++) {
@@ -166,12 +177,14 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		if (ventaOptional.isPresent()) {
 			venta  = ventaOptional.get();
 			mav.addObject("venta", venta);
-		if(venta.getClass() == VentaTarjeta.class) {
+		Object ventaObject = Hibernate.unproxy(venta);
+		    if(ventaObject.getClass().equals(VentaTarjeta.class)) {
 				tipoVenta = "Tarjeta";
 			}
 		}
 		mav.addObject("tipoVenta", tipoVenta);
 		return mav;
+	
 	}
 
 	@RequestMapping(value = "/ventas/delete/{id}", method = RequestMethod.GET)
@@ -182,5 +195,6 @@ private final Logger LOGGER = LoggerFactory.getLogger(VentaController.class);
 		return "redirect:/tienda/ventas/list";
 	}
  
+
 
 }

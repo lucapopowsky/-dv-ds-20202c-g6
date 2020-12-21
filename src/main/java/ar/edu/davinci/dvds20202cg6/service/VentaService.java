@@ -24,7 +24,6 @@ public interface VentaService {
 	public void delete(Long id);
 	public long count();
 	public Venta addItem(Long id, Item item) throws Exception;
-	/*esto fue agregado revisar*/
 	public Venta save(Venta venta) throws Exception;
 	public Venta updateItem(Long ventaId, Long itemId, Item item) throws Exception;
 	public Venta deleteItem(Long ventaId, Long itemId) throws Exception;

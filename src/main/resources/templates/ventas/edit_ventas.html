@@ -38,13 +38,13 @@
 				</tr>
 				<tr>
 					<td>Cliente:</td>
-					<td th:object="${cliente}">
-					    <select id="cliente" name="cliente">
+					<td>
+					    <select id="clienteId" name="clienteId">
   					        <option value="">Seleccione el cliente</option>
 					        <option th:each="cliente : ${clientes}"
 					                th:value="${cliente.getId()}"
 					                th:text="${cliente.getRazonSocial()}"
-					                th:selected="${cliente==cliente}">
+					               th:selected="${cliente.getId() == venta.getCliente().getId()}">
 					        </option>
 					    </select>
 					</td>
@@ -69,7 +69,9 @@
 					</tr>
 				</thead>
 				<tbody>
-
+				<tr th:if="${items.empty}">
+			            <td colspan="2"> No hay items aún </td>
+			        </tr>
 					<tr th:each="item : ${items}">
 						<td th:text="${item.getId()}">Item ID</td>
 						<td th:text="${item.getPrenda().getDescripcion()}">Descripcion</td>

@@ -41,7 +41,7 @@ public class Item implements Serializable{
 	@Column(name = "itm_id")
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="itm_vta_id", referencedColumnName="vta_id", nullable = false)
 	@JsonBackReference
 	private Venta venta;
@@ -50,7 +50,7 @@ public class Item implements Serializable{
 	@Column(name = "itm_cantidad")
 	private Integer cantidad;
 	
-	//@ManyToOne(targetEntity = Prenda.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	
 	@ManyToOne(targetEntity = Prenda.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinColumn(name="itm_prd_id", referencedColumnName="prd_id")
 	
