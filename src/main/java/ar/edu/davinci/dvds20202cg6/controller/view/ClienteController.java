@@ -1,4 +1,5 @@
 package ar.edu.davinci.dvds20202cg6.controller.view;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,7 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.davinci.dvds20202cg6.controller.TiendaApp;
 import ar.edu.davinci.dvds20202cg6.model.Cliente;
+import ar.edu.davinci.dvds20202cg6.model.Venta;
 import ar.edu.davinci.dvds20202cg6.service.ClienteService;
+import ar.edu.davinci.dvds20202cg6.service.VentaService;
 
 @Controller
 public class ClienteController extends TiendaApp {
@@ -81,8 +84,17 @@ private final Logger LOGGER = LoggerFactory.getLogger(ClienteController.class);
 	public String deleteCliente(@PathVariable(name = "id") Long clienteId) {
 		LOGGER.info("GET - deleteCliente - /clientes/delete/{id}");
 		LOGGER.info("cliente: " + clienteId);
-		clienteService.delete(clienteId);
-		return "redirect:/tienda/clientes/list";
+		String link = " ";
+		
+			clienteService.delete(clienteId);
+			link= "redirect:/tienda/clientes/list";
+		
+		return link;
+	}
+	
+	@RequestMapping(value = "/clientes/error", method = RequestMethod.GET)
+	public String error() {
+		return "error";
 	}
 
 }
